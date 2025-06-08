@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
 
   const handleLogin = async (e) => {
@@ -16,26 +16,27 @@ function Login() {
         email,
         password,
       });
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem('token', res.data.token);
       setMessage(`Welcome, ${res.data.user.name}!`);
     } catch (err) {
-      setMessage("Login failed. Please try again.");
+      setMessage('Login failed. Please try again.');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white shadow-md rounded-lg w-full max-w-md p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
+              id="email"
               type="email"
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email"
+              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -43,12 +44,14 @@ function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
+              id="password"
               type="password"
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your password"
+              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -57,18 +60,18 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-medium transition"
           >
             Login
           </button>
         </form>
 
         {message && (
-          <p className="mt-4 text-center text-red-500 text-sm">{message}</p>
+          <p className="mt-4 text-center text-sm text-red-600">{message}</p>
         )}
 
         <p className="mt-4 text-sm text-center">
-          Don't have an account?{" "}
+          Don’t have an account?{' '}
           <Link to="/register" className="text-blue-600 hover:underline">
             Register
           </Link>
