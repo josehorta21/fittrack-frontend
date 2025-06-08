@@ -1,60 +1,56 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const API_URL = 'https://fittrack-backend-crua.onrender.com/api/auth';
+const Register = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/register`, { email, password });
-      setMessage(res.data.message);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, { email, password });
+      navigate("/");
     } catch (err) {
-      setMessage('Registration failed. Please try again.');
+      alert("Registration failed.");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleRegister} className="bg-white p-6 rounded shadow-md w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-center">Register</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border border-gray-300 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border border-gray-300 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
-        >
-          Register
-        </button>
-        {message && <p className="text-sm text-center text-green-600">{message}</p>}
-        <p className="text-sm text-center">
-          Already have an account?{' '}
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <button type="submit" className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">
+            Register
+          </button>
+        </form>
+        <p className="mt-4 text-sm text-center">
+          Already have an account?{" "}
           <Link to="/" className="text-blue-600 underline">
             Login
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
-}
+};
 
 export default Register;
