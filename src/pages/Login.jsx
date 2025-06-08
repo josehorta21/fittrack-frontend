@@ -1,82 +1,61 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = 'https://fittrack-backend-crua.onrender.com/api/auth';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/api/auth/login`, {
-        email,
-        password,
-      });
+      const res = await axios.post(`${API_URL}/login`, { email, password });
       localStorage.setItem('token', res.data.token);
-      setMessage(`Welcome, ${res.data.user.name}!`);
+      setMessage(`Welcome, ${res.data.user.name}`);
+      navigate('/dashboard');
     } catch (err) {
       setMessage('Login failed. Please try again.');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-medium transition"
-          >
-            Login
-          </button>
-        </form>
-
-        {message && (
-          <p className="mt-4 text-center text-sm text-red-600">{message}</p>
-        )}
-
-        <p className="mt-4 text-sm text-center">
-          Don’t have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md w-full max-w-sm space-y-4">
+        <h1 className="text-2xl font-bold text-center">Login</h1>
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 border border-gray-300 rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 border border-gray-300 rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Login
+        </button>
+        {message && <p className="text-sm text-center text-red-600">{message}</p>}
+        <p className="text-sm text-center">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-blue-600 underline">
             Register
           </Link>
         </p>
-      </div>
+      </form>
     </div>
   );
 }
