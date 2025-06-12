@@ -6,39 +6,29 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-        username,
-        email,
-        password,
-      });
-  
-      console.log("✅ User registered:", res.data); // Debug
-      alert("Successfully registered!");
-      navigate("/login");
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        { username, email, password }
+      );
+      console.log("User registered:", res.data);
+      // ✅ Almacena el token si lo estás devolviendo desde el backend
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
     } catch (err) {
-      console.error("❌ Registration error:", err);
-      alert("Registration failed. Please try again.");
+      console.error("Registration error:", err);
+      alert("Registration failed.");
     }
   };
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
-
-        {error && <div className="text-red-600 text-center mb-4">{error}</div>}
-        {success && (
-          <div className="text-green-600 text-center mb-4">{success}</div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
