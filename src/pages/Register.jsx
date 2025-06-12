@@ -6,19 +6,25 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         username,
         email,
         password,
       });
-      navigate("/login");
+      setSuccess("Account created successfully!");
+      setTimeout(() => navigate("/login"), 1500); // Wait 1.5 sec then redirect
     } catch (err) {
-      alert("Registration failed.");
+      setError(err.response?.data?.message || "Registration failed.");
     }
   };
 
@@ -26,6 +32,12 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+
+        {error && <div className="text-red-600 text-center mb-4">{error}</div>}
+        {success && (
+          <div className="text-green-600 text-center mb-4">{success}</div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
