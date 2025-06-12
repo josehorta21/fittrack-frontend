@@ -16,7 +16,7 @@ const Register = () => {
         { username, email, password }
       );
       console.log("User registered:", res.data);
-      // ✅ Almacena el token si lo estás devolviendo desde el backend
+     
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err) {
