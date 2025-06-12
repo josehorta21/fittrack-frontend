@@ -15,7 +15,10 @@ const Dashboard = () => {
 
   const fetchWorkouts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/workouts`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/workouts`, {
+        headers: { Authorization: token },
+      });
       setWorkouts(response.data);
     } catch (error) {
       console.error("Error loading workouts", error);
@@ -34,7 +37,17 @@ const Dashboard = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/workouts`, form);
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/workouts`,
+        {
+          ...form,
+          duration: Number(form.duration),
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
       fetchWorkouts();
       setForm({ type: "", duration: "", intensity: "", notes: "" });
     } catch (error) {
@@ -53,7 +66,10 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">FitTrack Dashboard</h1>
-        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
           Log Out
         </button>
       </div>
