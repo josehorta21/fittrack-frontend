@@ -14,10 +14,13 @@ const Login = () => {
         `${import.meta.env.VITE_API_URL}/api/auth/login`,
         { email, password }
       );
+
+      console.log("✅ Login success:", res.data);
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err) {
-      alert("Login failed. Check credentials.");
+      console.error("❌ Login failed:", err);
+      alert("Login failed. Please check your credentials.");
     }
   };
 
@@ -42,7 +45,10 @@ const Login = () => {
             className="w-full p-2 border rounded"
             required
           />
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          >
             Login
           </button>
         </form>

@@ -12,21 +12,22 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         username,
         email,
         password,
       });
-      setSuccess("Account created successfully!");
-      setTimeout(() => navigate("/login"), 1500); // Wait 1.5 sec then redirect
+  
+      console.log("✅ User registered:", res.data); // Debug
+      alert("Successfully registered!");
+      navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed.");
+      console.error("❌ Registration error:", err);
+      alert("Registration failed. Please try again.");
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
